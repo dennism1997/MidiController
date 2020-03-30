@@ -35,7 +35,6 @@ class MainFragment : Fragment(), MidiSelectDialog.Listener {
     private lateinit var midiManager: MidiManager
     private lateinit var midiController: MidiController
     private var midiDevice: MidiDevice? = null
-//    private lateinit var flexBoxLayout: FlexboxLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +56,7 @@ class MainFragment : Fragment(), MidiSelectDialog.Listener {
 
     override fun onResume() {
         super.onResume()
-        if (midiDevice == null) {
+        if (midiDevice == null || midiController.needsRefresh()) {
             if (midiManager.devices.size == 1) {
                 openMidiDevice(midiManager.devices[0])
             } else if (midiManager.devices.size > 1) {

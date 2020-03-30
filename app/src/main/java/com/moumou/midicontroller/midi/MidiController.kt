@@ -58,12 +58,21 @@ class MidiController(device: MidiDevice) : MidiReceiver() {
         if (msg != null) {
             Log.i(
                 "MIDI Received",
-                msg.copyOfRange(0, count).joinToString())
-            for (subscriber in this.subscribers) {
-                subscriber.handle(msg)
+                "t${msg.copyOfRange(offset, offset + count).joinToString()}"
+            )
+            for (i in 0 until (count / 3)){
+                for (subscriber in this.subscribers) {
+                    val fromIndex = offset + i * 3
+                    subscriber.handle(msg.copyOfRange(fromIndex, fromIndex + 3))
+                }
             }
+
         } else {
             Log.e("MIDI Received", "null")
         }
+    }
+
+    fun needsRefresh(): Boolean {
+        return this.inputPort == null || this.outputPort == null
     }
 }
