@@ -58,7 +58,7 @@ class MidiController(device: MidiDevice) : MidiReceiver() {
         if (msg != null) {
             Log.i(
                 "MIDI Received",
-                "t${msg.copyOfRange(offset, offset + count).joinToString()}"
+                "${msg.copyOfRange(offset, offset + count).joinToString()}"
             )
             for (i in 0 until (count / 3)){
                 for (subscriber in this.subscribers) {

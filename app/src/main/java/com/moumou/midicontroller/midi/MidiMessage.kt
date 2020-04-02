@@ -23,7 +23,9 @@ object MidiMessage {
     fun getColor(byte: Int): Int {
         return when (byte) {
             0 -> Color.rgb(0, 0, 0)
-            122-> Color.rgb(204,204,204)
+            1 -> Color.DKGRAY
+            2 -> Color.GRAY
+            122 -> Color.rgb(204, 204, 204)
             125 -> Color.rgb(0, 0, 255)
             126 -> Color.rgb(0, 255, 0)
             127 -> Color.rgb(255, 0, 0)
