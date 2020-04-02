@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MidiController</string>
+    <string name="fader">Fader</string>
+    <string name="launchpad">Pad</string>
 </resources>

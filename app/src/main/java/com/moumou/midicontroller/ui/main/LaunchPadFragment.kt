@@ -17,16 +17,16 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.moumou.midicontroller.R
-import com.moumou.midicontroller.databinding.MainFragmentBinding
+import com.moumou.midicontroller.databinding.LaunchpadFragmentBinding
 import com.moumou.midicontroller.midi.MidiController
 import com.moumou.midicontroller.ui.main.midi.LaunchButtons
-import kotlinx.android.synthetic.main.main_fragment.*
+import kotlinx.android.synthetic.main.launchpad_fragment.*
 
 
-class MainFragment : Fragment(), MidiSelectDialog.Listener {
+class LaunchPadFragment : Fragment(), MidiSelectDialog.Listener {
 
     companion object {
-        fun newInstance() = MainFragment()
+        fun newInstance() = LaunchPadFragment()
         const val AMOUNT_BUTTONS = 20
     }
 
@@ -40,9 +40,9 @@ class MainFragment : Fragment(), MidiSelectDialog.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = DataBindingUtil.inflate<MainFragmentBinding>(
+        val binding = DataBindingUtil.inflate<LaunchpadFragmentBinding>(
             inflater,
-            R.layout.main_fragment,
+            R.layout.launchpad_fragment,
             container,
             false
         )
