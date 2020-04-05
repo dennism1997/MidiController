@@ -1,20 +1,16 @@
 package com.moumou.midicontroller.midi
 
 import android.media.midi.*
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
+import java.io.Serializable
 
 
 /**
  * Created by MouMou on 29-03-20.
  */
-class MidiController(device: MidiDevice) : MidiReceiver() {
-    companion object {
-        const val PORT = 0
-    }
-
-    init {
-        this.setDevice(device)
-    }
+object MidiController : MidiReceiver(), Serializable {
 
     private var inputPort: MidiInputPort? = null
     private var outputPort: MidiOutputPort? = null
@@ -22,11 +18,11 @@ class MidiController(device: MidiDevice) : MidiReceiver() {
 
     fun send(byte1: Byte, byte2: Byte, byte3: Byte) {
         val byteArrayOf = byteArrayOf(byte1, byte2, byte3)
-        Log.i("MIDI Sent", byteArrayOf.joinToString())
+        Log.d("MIDI Sent", byteArrayOf.joinToString())
         inputPort!!.send(byteArrayOf, 0, 3)
     }
 
-    private fun setDevice(device: MidiDevice) {
+    fun setDevice(device: MidiDevice) {
         for (port in device.info.ports) {
             if (inputPort == null && port.type == MidiDeviceInfo.PortInfo.TYPE_INPUT) {
                 val input = device.openInputPort(port.portNumber)
@@ -56,11 +52,11 @@ class MidiController(device: MidiDevice) : MidiReceiver() {
 
     override fun onSend(msg: ByteArray?, offset: Int, count: Int, timestamp: Long) {
         if (msg != null) {
-            Log.i(
+            Log.d(
                 "MIDI Received",
-                "${msg.copyOfRange(offset, offset + count).joinToString()}"
+                msg.copyOfRange(offset, offset + count).joinToString()
             )
-            for (i in 0 until (count / 3)){
+            for (i in 0 until (count / 3)) {
                 for (subscriber in this.subscribers) {
                     val fromIndex = offset + i * 3
                     subscriber.handle(msg.copyOfRange(fromIndex, fromIndex + 3))
@@ -74,5 +70,9 @@ class MidiController(device: MidiDevice) : MidiReceiver() {
 
     fun needsRefresh(): Boolean {
         return this.inputPort == null || this.outputPort == null
+    }
+
+    fun removeSubscriber(subscriber: MidiReceiverSubscriber) {
+        this.subscribers.remove(subscriber)
     }
 }

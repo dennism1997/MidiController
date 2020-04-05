@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_item_a"
         android:icon="@android:drawable/ic_menu_add"
-        android:title="@string/launchpad"
+        android:title="@string/tab_a_label"
         app:showAsAction="always" />
     <item
-        android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="@string/fader"
+        android:id="@+id/menu_item_b"
+        android:icon="@drawable/fader_icon"
+        android:title="@string/tab_b_label"
         app:showAsAction="ifRoom" />
 </menu>

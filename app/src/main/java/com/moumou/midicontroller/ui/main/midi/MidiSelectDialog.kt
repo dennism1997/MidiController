@@ -1,4 +1,4 @@
-package com.moumou.midicontroller.ui.main
+package com.moumou.midicontroller.ui.main.midi
 
 import android.app.Dialog
 import android.media.midi.MidiDeviceInfo
