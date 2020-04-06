@@ -3,7 +3,6 @@ package com.moumou.midicontroller.ui.main.midi
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
-import android.util.Log
 import androidx.appcompat.widget.AppCompatButton
 import com.moumou.midicontroller.midi.MidiController
 import com.moumou.midicontroller.midi.MidiMessage
@@ -25,11 +24,11 @@ class LaunchButtons(
 
     init {
         buttons.forEachIndexed { index, button ->
-            val note = MidiMessage.getNextNote()
+            val note = MidiController.getNextNote()
             noteToButtonIndex[note] = index
 
             button.setOnClickListener {
-                controller.send(MidiMessage.noteOn(1), note.toByte(), 127.toByte())
+                controller.sendNoteOnMessage(1, note, 127)
             }
             button.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC)
         }

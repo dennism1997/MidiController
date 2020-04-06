@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import androidx.appcompat.widget.AppCompatSeekBar
@@ -15,6 +14,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.moumou.midicontroller.R
 import com.moumou.midicontroller.databinding.FaderFragmentBinding
+import com.moumou.midicontroller.midi.MidiController
 
 /**
  * Created by MouMou on 02-04-20.
@@ -27,7 +27,7 @@ class FaderFragment : Fragment() {
         }
     }
 
-    private lateinit var faders: Array<AppCompatSeekBar>
+    private lateinit var faders: Array<Fader>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,6 +61,7 @@ class FaderFragment : Fragment() {
                     progress: Int,
                     fromUser: Boolean
                 ) {
+                    MidiController.sendControlChange(fader.channel, fader.note, progress.toByte())
                 }
 
                 override fun onStartTrackingTouch(seekBar: SeekBar?) {

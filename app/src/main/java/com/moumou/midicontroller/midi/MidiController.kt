@@ -1,8 +1,6 @@
 package com.moumou.midicontroller.midi
 
 import android.media.midi.*
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.Log
 import java.io.Serializable
 
@@ -16,10 +14,45 @@ object MidiController : MidiReceiver(), Serializable {
     private var outputPort: MidiOutputPort? = null
     private val subscribers: ArrayList<MidiReceiverSubscriber> = ArrayList()
 
-    fun send(byte1: Byte, byte2: Byte, byte3: Byte) {
-        val byteArrayOf = byteArrayOf(byte1, byte2, byte3)
-        Log.d("MIDI Sent", byteArrayOf.joinToString())
-        inputPort!!.send(byteArrayOf, 0, 3)
+    private var currentNote: Int = 0
+    fun getNextNote(): Int {
+        if (currentNote == 127) {
+            channel++
+            currentNote = 0
+        } else {
+            currentNote += 1
+        }
+        return currentNote
+    }
+
+    var channel: Int = 1
+        private set
+
+    private fun sendMidiMessage(byte1: Byte, byte2: Byte, byte3: Byte) {
+        val byteArray = byteArrayOf(byte1, byte2, byte3)
+        byteArray.forEachIndexed { index, byte ->
+            if (byte < 0) {
+                throw RuntimeException("Midi byte at index `$index` must be positive, but was `$byte`")
+            }
+            if(byte > 127) {
+                throw RuntimeException("Midi byte at index `$index` must be smaller than 128, but was `$byte`")
+            }
+        }
+        Log.d("MIDI Sent", byteArray.joinToString())
+        inputPort!!.send(byteArray, 0, 3)
+    }
+
+    fun sendNoteOnMessage(channel: Int, note: Byte, value: Byte) {
+        sendMidiMessage(MidiMessage.noteOn(channel), note, value)
+    }
+
+    fun sendNoteOnMessage(channel: Int, note: Int, value: Int) {
+        sendMidiMessage(MidiMessage.noteOn(channel), note.toByte(), value.toByte())
+    }
+
+
+    fun sendControlChange(channel: Int, note: Byte, value: Byte) {
+        sendMidiMessage(MidiMessage.controlChange(channel), note, value)
     }
 
     fun setDevice(device: MidiDevice) {

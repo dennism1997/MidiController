@@ -8,17 +8,17 @@ import android.util.Log
  */
 object MidiMessage {
 
-    private var currentNote: Int = 0
-    fun getNextNote(): Int {
-        return currentNote++
-    }
-
     fun noteOn(channel: Int): Byte {
-        return ((9 shl 4) + channel).toByte()
+        return ((NOTE_ON shl 4) + channel).toByte()
     }
 
-    const val NOTE_ON: Byte = 9
-    const val NOTE_OFF: Byte = 9
+    fun controlChange(channel: Int): Byte {
+        return ((CONTROL_CHANGE shl 4) + channel).toByte()
+    }
+
+    const val NOTE_OFF: Int = 8
+    const val NOTE_ON: Int = 9
+    const val CONTROL_CHANGE: Int = 11
 
     fun getColor(byte: Int): Int {
         return when (byte) {
@@ -39,6 +39,10 @@ object MidiMessage {
 
 @ExperimentalUnsignedTypes
 fun Byte.isNoteOn(): Boolean {
-    return this.toUByte().toInt().ushr(4).toByte() == MidiMessage.NOTE_ON
+    return this.toUByte().toInt().ushr(4) == MidiMessage.NOTE_ON
 }
 
+@ExperimentalUnsignedTypes
+fun Byte.isControlChange(): Boolean {
+    return this.toUByte().toInt().ushr(4) == MidiMessage.CONTROL_CHANGE
+}
