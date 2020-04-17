@@ -1,15 +1,14 @@
 package com.moumou.midicontroller.ui.main.fader
 
+import abak.tr.com.boxedverticalseekbar.BoxedVertical
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.LinearLayout
-import android.widget.SeekBar
-import androidx.appcompat.widget.AppCompatSeekBar
+import android.widget.TextView
 import androidx.core.os.bundleOf
+import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.moumou.midicontroller.R
@@ -21,13 +20,13 @@ import com.moumou.midicontroller.midi.MidiController
  */
 class FaderFragment : Fragment() {
     companion object {
-        private const val AMOUNT_FADERS = 6
         fun newInstance() = FaderFragment().apply {
             arguments = bundleOf()
         }
     }
 
     private lateinit var faders: Array<Fader>
+    private lateinit var faderContainer: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,34 +42,32 @@ class FaderFragment : Fragment() {
             )
 
         val view = binding.root
-        faders = Array(AMOUNT_FADERS) {
-            val fader = Fader(ContextThemeWrapper(context!!, R.style.Fader))
+        faderContainer = binding.faderContainer
 
-            binding.faderContainer.addView(
-                fader,
-                LinearLayout.LayoutParams(0, MATCH_PARENT, 1f)
-            )
-            fader
-        }
-
+        val iterator = faderContainer.children.iterator()
+        faders = Array(faderContainer.childCount, fun(_: Int): Fader {
+            val linearLayout = iterator.next() as LinearLayout
+            val childIterator = linearLayout.children.iterator()
+            val boxedVertical = childIterator.next() as BoxedVertical
+            val textView = childIterator.next() as TextView
+            return Fader(boxedVertical, textView)
+        })
 
         faders.forEach { fader ->
-            fader.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    MidiController.sendControlChange(fader.channel, fader.note, progress.toByte())
+            fader.boxedVertical.setOnBoxedPointsChangeListener(object :
+                BoxedVertical.OnValuesChangeListener {
+                override fun onPointsChanged(boxedPoints: BoxedVertical?, value: Int) {
+                    MidiController.sendControlChange(fader.channel, fader.note, value.toByte())
                 }
 
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                override fun onStartTrackingTouch(boxedPoints: BoxedVertical?) {
                 }
 
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                override fun onStopTrackingTouch(boxedPoints: BoxedVertical?) {
                 }
             })
         }
         return view
     }
+
 }

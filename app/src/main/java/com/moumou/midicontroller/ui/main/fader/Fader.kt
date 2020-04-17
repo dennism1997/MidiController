@@ -1,29 +1,22 @@
 package com.moumou.midicontroller.ui.main.fader
 
-import android.content.Context
-import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatSeekBar
-import com.moumou.midicontroller.R
+import abak.tr.com.boxedverticalseekbar.BoxedVertical
+import android.widget.TextView
 import com.moumou.midicontroller.midi.MidiController
+
 
 /**
  * Created by MouMou on 04-04-20.
  */
 
 class Fader(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = R.attr.seekBarStyle
-) : AppCompatSeekBar(context, attrs, defStyleAttr) {
+    val boxedVertical: BoxedVertical,
+    private val textView: TextView
+) {
     val channel: Int = MidiController.channel
     val note: Byte = MidiController.getNextNote().toByte()
 
-    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, R.attr.seekBarStyle)
-
-
-    init {
-        this.rotation = -90f
+    fun setText(text: String) {
+        textView.text = text
     }
-
-
 }

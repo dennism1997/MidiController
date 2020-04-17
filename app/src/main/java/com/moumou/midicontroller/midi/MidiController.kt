@@ -31,8 +31,8 @@ object MidiController : MidiReceiver(), Serializable {
     private fun sendMidiMessage(byte1: Byte, byte2: Byte, byte3: Byte) {
         val byteArray = byteArrayOf(byte1, byte2, byte3)
         byteArray.forEachIndexed { index, byte ->
-            if (byte < 0) {
-                throw RuntimeException("Midi byte at index `$index` must be positive, but was `$byte`")
+            if (byte < -127) {
+                throw RuntimeException("Midi byte at index `$index` must be bigger than -127, but was `$byte`")
             }
             if(byte > 127) {
                 throw RuntimeException("Midi byte at index `$index` must be smaller than 128, but was `$byte`")
