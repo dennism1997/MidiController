@@ -20,6 +20,8 @@ import com.moumou.midicontroller.midi.MidiController
  */
 class FaderFragment : Fragment() {
     companion object {
+        const val AMOUNT_FADERS = 6
+
         fun newInstance() = FaderFragment().apply {
             arguments = bundleOf()
         }
@@ -45,12 +47,18 @@ class FaderFragment : Fragment() {
         faderContainer = binding.faderContainer
 
         val iterator = faderContainer.children.iterator()
-        faders = Array(faderContainer.childCount, fun(_: Int): Fader {
+        faders = Array(faderContainer.childCount, fun(index: Int): Fader {
             val linearLayout = iterator.next() as LinearLayout
             val childIterator = linearLayout.children.iterator()
             val boxedVertical = childIterator.next() as BoxedVertical
             val textView = childIterator.next() as TextView
-            return Fader(boxedVertical, textView)
+
+            return Fader(
+                boxedVertical,
+                textView,
+                MidiController.channel,
+                MidiController.faderNotes[index].toByte()
+            )
         })
 
         return view

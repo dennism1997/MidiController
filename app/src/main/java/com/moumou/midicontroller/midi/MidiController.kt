@@ -2,6 +2,8 @@ package com.moumou.midicontroller.midi
 
 import android.media.midi.*
 import android.util.Log
+import com.moumou.midicontroller.ui.main.fader.FaderFragment
+import com.moumou.midicontroller.ui.main.midi.LaunchButtons
 import java.io.Serializable
 
 
@@ -13,6 +15,16 @@ object MidiController : MidiReceiver(), Serializable {
     private var inputPort: MidiInputPort? = null
     private var outputPort: MidiOutputPort? = null
     private val subscribers: ArrayList<MidiReceiverSubscriber> = ArrayList()
+
+    val launchPadNotes: Array<Int> = Array(LaunchButtons.AMOUNT_BUTTONS) {
+        getNextNote()
+    }
+
+    val faderNotes: Array<Int> = Array(FaderFragment.AMOUNT_FADERS) {
+        getNextNote()
+    }
+
+    val upDownButtonNotes: Pair<Int, Int> = Pair(getNextNote(), getNextNote())
 
     private var currentNote: Int = 0
     fun getNextNote(): Int {
@@ -34,7 +46,7 @@ object MidiController : MidiReceiver(), Serializable {
             if (byte < -127) {
                 throw RuntimeException("Midi byte at index `$index` must be bigger than -127, but was `$byte`")
             }
-            if(byte > 127) {
+            if (byte > 127) {
                 throw RuntimeException("Midi byte at index `$index` must be smaller than 128, but was `$byte`")
             }
         }

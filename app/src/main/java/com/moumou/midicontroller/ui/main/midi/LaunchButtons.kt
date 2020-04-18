@@ -1,6 +1,5 @@
 package com.moumou.midicontroller.ui.main.midi
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import androidx.appcompat.widget.AppCompatButton
@@ -13,26 +12,12 @@ import com.moumou.midicontroller.midi.isNoteOn
  * Created by MouMou on 30-03-20.
  */
 @ExperimentalUnsignedTypes
-class LaunchButtons(
-    private val buttons: ArrayList<AppCompatButton>,
-    controller: MidiController,
-    context: Context
-) :
-    MidiElement(controller, context), MidiReceiverSubscriber {
+object LaunchButtons :
+    MidiReceiverSubscriber {
 
+    const val AMOUNT_BUTTONS = 25
     private val noteToButtonIndex = HashMap<Int, Int>()
-
-    init {
-        buttons.forEachIndexed { index, button ->
-            val note = MidiController.getNextNote()
-            noteToButtonIndex[note] = index
-
-            button.setOnClickListener {
-                controller.sendNoteOnMessage(1, note, 127)
-            }
-            button.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC)
-        }
-    }
+    private lateinit var buttons: ArrayList<AppCompatButton>
 
     override fun handle(byteArray: ByteArray) {
         if (byteArray[0].isNoteOn()) {
@@ -42,6 +27,19 @@ class LaunchButtons(
                 val color = MidiMessage.getColor(byteArray[2].toUByte().toInt())
                 buttons[buttonIndex].background.setColorFilter(color, PorterDuff.Mode.SRC)
             }
+        }
+    }
+
+    fun setButtons(buttons: ArrayList<AppCompatButton>) {
+        this.buttons = buttons
+        this.buttons.forEachIndexed { index, button ->
+            val note = MidiController.launchPadNotes[index]
+            noteToButtonIndex[note] = index
+
+            button.setOnClickListener {
+                MidiController.sendNoteOnMessage(MidiController.channel, note, 127)
+            }
+            button.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC)
         }
     }
 }

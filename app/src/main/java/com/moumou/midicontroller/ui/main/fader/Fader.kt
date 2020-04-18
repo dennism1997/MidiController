@@ -11,10 +11,10 @@ import com.moumou.midicontroller.midi.MidiController
 
 class Fader(
     val boxedVertical: BoxedVertical,
-    private val textView: TextView
+    private val textView: TextView,
+    val channel: Int,
+    val note: Byte
 ) {
-    val channel: Int = MidiController.channel
-    val note: Byte = MidiController.getNextNote().toByte()
 
     fun setText(text: String) {
         textView.text = text

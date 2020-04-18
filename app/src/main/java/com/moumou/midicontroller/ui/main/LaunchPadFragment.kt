@@ -17,6 +17,7 @@ import com.moumou.midicontroller.ui.main.midi.LaunchButtons
 import kotlinx.android.synthetic.main.launchpad_fragment.*
 
 
+@ExperimentalUnsignedTypes
 class LaunchPadFragment() : Fragment() {
 
     companion object {
@@ -26,7 +27,8 @@ class LaunchPadFragment() : Fragment() {
         }
     }
 
-    private lateinit var launchButtons: LaunchButtons
+    private lateinit var upButton: AppCompatButton
+    private lateinit var downButton: AppCompatButton
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,18 +41,28 @@ class LaunchPadFragment() : Fragment() {
             false
         )
 
+        upButton = binding.upButton
+        downButton = binding.downButton
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val buttons = ArrayList<AppCompatButton>()
         buttons.addAll(this.buttonContainer.children as Sequence<MaterialButton>)
-        launchButtons = LaunchButtons(buttons, MidiController, context!!)
-        MidiController.addSubscriber(launchButtons)
+        LaunchButtons.setButtons(buttons)
+        MidiController.addSubscriber(LaunchButtons)
+
+        upButton.setOnClickListener {
+            MidiController.sendNoteOnMessage(MidiController.channel, MidiController.upDownButtonNotes.first, 127)
+        }
+        downButton.setOnClickListener {
+            MidiController.sendNoteOnMessage(MidiController.channel, MidiController.upDownButtonNotes.second, 127)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        MidiController.removeSubscriber(launchButtons)
+        MidiController.removeSubscriber(LaunchButtons)
     }
 }
