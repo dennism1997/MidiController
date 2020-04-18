@@ -9,15 +9,17 @@
         android:layout_height="match_parent"
         android:baselineAligned="false"
         android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingRight="6dp"
         tools:context=".FaderFragment">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -38,19 +40,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1"
+                android:text="@string/track_1"
                 android:textAlignment="viewStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="36sp" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -71,10 +72,138 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="2"
+                android:text="@string/track_2"
                 android:textAlignment="viewStart"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="36sp" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <abak.tr.com.boxedverticalseekbar.BoxedVertical
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:backgroundColor="@color/colorExtraDark"
+                app:cornerRadius="20dp"
+                app:defaultValue="127"
+                app:imageEnabled="false"
+                app:max="127"
+                app:progressColor="@color/colorAccent"
+                app:step="5"
+                app:textEnabled="false"
+                app:touchDisabled="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/track_3"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <abak.tr.com.boxedverticalseekbar.BoxedVertical
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:backgroundColor="@color/colorExtraDark"
+                app:cornerRadius="20dp"
+                app:defaultValue="127"
+                app:imageEnabled="false"
+                app:max="127"
+                app:progressColor="@color/colorAccent"
+                app:step="5"
+                app:textEnabled="false"
+                app:touchDisabled="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/track_4"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <abak.tr.com.boxedverticalseekbar.BoxedVertical
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:backgroundColor="@color/colorExtraDark"
+                app:cornerRadius="20dp"
+                app:defaultValue="127"
+                app:imageEnabled="false"
+                app:max="127"
+                app:progressColor="@color/colorAccent"
+                app:step="5"
+                app:textEnabled="false"
+                app:touchDisabled="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/track_5"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <abak.tr.com.boxedverticalseekbar.BoxedVertical
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                app:backgroundColor="@color/colorExtraDark"
+                app:cornerRadius="20dp"
+                app:defaultValue="127"
+                app:imageEnabled="false"
+                app:max="127"
+                app:progressColor="@color/colorAccent"
+                app:step="5"
+                app:textEnabled="false"
+                app:touchDisabled="false" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/track_6"
+                android:textAlignment="viewStart"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        </LinearLayout>
+
     </LinearLayout>
 </layout>

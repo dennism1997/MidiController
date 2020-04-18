@@ -2,4 +2,10 @@
     <string name="app_name">MidiController</string>
     <string name="tab_b_label">Faders</string>
     <string name="tab_a_label">LaunchPad</string>
+    <string name="track_1">Track 1</string>
+    <string name="track_2">Track 2</string>
+    <string name="track_3">Track 3</string>
+    <string name="track_4">Track 4</string>
+    <string name="track_5">Track 5</string>
+    <string name="track_6">Track 6</string>
 </resources>

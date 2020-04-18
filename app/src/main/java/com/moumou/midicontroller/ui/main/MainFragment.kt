@@ -64,6 +64,7 @@ class MainFragment : Fragment(), MidiSelectDialog.Listener {
             }
         }
         viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
+        viewPager.isUserInputEnabled = false
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrolled(
                 position: Int,
@@ -111,7 +112,7 @@ class MainFragment : Fragment(), MidiSelectDialog.Listener {
     private fun openMidiDeviceSelectDialog(deviceInfos: Array<MidiDeviceInfo>) {
         val dialog = MidiSelectDialog(deviceInfos)
         dialog.setTargetFragment(this, 0)
-        dialog.show(this.parentFragmentManager, "MidiDeviceDialog")
+        dialog.show(parentFragmentManager, "MidiDeviceDialog")
     }
 
     override fun openMidiDevice(deviceInfo: MidiDeviceInfo) {

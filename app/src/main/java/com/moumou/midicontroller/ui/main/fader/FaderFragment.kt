@@ -53,6 +53,10 @@ class FaderFragment : Fragment() {
             return Fader(boxedVertical, textView)
         })
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         faders.forEach { fader ->
             fader.boxedVertical.setOnBoxedPointsChangeListener(object :
                 BoxedVertical.OnValuesChangeListener {
@@ -67,7 +71,5 @@ class FaderFragment : Fragment() {
                 }
             })
         }
-        return view
     }
-
 }
