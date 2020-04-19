@@ -19,7 +19,7 @@ import com.ismaeldivita.chipnavigation.ChipNavigationBar
 import com.moumou.midicontroller.R
 import com.moumou.midicontroller.databinding.MainFragmentBinding
 import com.moumou.midicontroller.midi.MidiController
-import com.moumou.midicontroller.ui.main.fader.FaderFragment
+import com.moumou.midicontroller.ui.main.volumeFaders.VolumeFadersFragment
 import com.moumou.midicontroller.ui.main.midi.MidiSelectDialog
 
 /**
@@ -54,7 +54,7 @@ class MainFragment : Fragment(), MidiSelectDialog.Listener {
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
                     0 -> LaunchPadFragment.newInstance()
-                    1 -> FaderFragment.newInstance()
+                    1 -> VolumeFadersFragment.newInstance()
                     else -> throw RuntimeException("invalid position $position")
                 }
             }

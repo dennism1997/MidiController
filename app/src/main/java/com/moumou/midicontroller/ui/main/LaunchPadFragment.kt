@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.os.bundleOf
 import androidx.core.view.children
@@ -18,7 +19,7 @@ import kotlinx.android.synthetic.main.launchpad_fragment.*
 
 
 @ExperimentalUnsignedTypes
-class LaunchPadFragment() : Fragment() {
+class LaunchPadFragment : Fragment() {
 
     companion object {
         fun newInstance() = LaunchPadFragment().apply {
@@ -53,11 +54,33 @@ class LaunchPadFragment() : Fragment() {
         LaunchButtons.setButtons(buttons)
         MidiController.addSubscriber(LaunchButtons)
 
+        buttons.forEachIndexed { index, button ->
+            val note = MidiController.Notes.launchPadNotes[index]
+            button.setOnClickListener {
+                val sent = MidiController.sendNoteOnMessage(MidiController.Notes.channel, note, 127)
+                if (!sent) {
+                    Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+        }
+
+        val notes = MidiController.Notes.upDownButtonNotes
         upButton.setOnClickListener {
-            MidiController.sendNoteOnMessage(MidiController.channel, MidiController.upDownButtonNotes.first, 127)
+            val sent =
+                MidiController.sendNoteOnMessage(MidiController.Notes.channel, notes.first, 127)
+            if (!sent) {
+                Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
         downButton.setOnClickListener {
-            MidiController.sendNoteOnMessage(MidiController.channel, MidiController.upDownButtonNotes.second, 127)
+            val sent =
+                MidiController.sendNoteOnMessage(MidiController.Notes.channel, notes.second, 127)
+            if (!sent) {
+                Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 

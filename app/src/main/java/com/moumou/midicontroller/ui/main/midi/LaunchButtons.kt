@@ -11,7 +11,6 @@ import com.moumou.midicontroller.midi.isNoteOn
 /**
  * Created by MouMou on 30-03-20.
  */
-@ExperimentalUnsignedTypes
 object LaunchButtons :
     MidiReceiverSubscriber {
 
@@ -19,6 +18,7 @@ object LaunchButtons :
     private val noteToButtonIndex = HashMap<Int, Int>()
     private lateinit var buttons: ArrayList<AppCompatButton>
 
+    @ExperimentalUnsignedTypes
     override fun handle(byteArray: ByteArray) {
         if (byteArray[0].isNoteOn()) {
             val note = byteArray[1].toUByte().toInt()
@@ -33,12 +33,8 @@ object LaunchButtons :
     fun setButtons(buttons: ArrayList<AppCompatButton>) {
         this.buttons = buttons
         this.buttons.forEachIndexed { index, button ->
-            val note = MidiController.launchPadNotes[index]
+            val note = MidiController.Notes.launchPadNotes[index]
             noteToButtonIndex[note] = index
-
-            button.setOnClickListener {
-                MidiController.sendNoteOnMessage(MidiController.channel, note, 127)
-            }
             button.background.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC)
         }
     }

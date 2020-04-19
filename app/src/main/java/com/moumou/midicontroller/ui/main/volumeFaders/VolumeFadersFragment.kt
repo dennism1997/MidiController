@@ -1,4 +1,4 @@
-package com.moumou.midicontroller.ui.main.fader
+package com.moumou.midicontroller.ui.main.volumeFaders
 
 import abak.tr.com.boxedverticalseekbar.BoxedVertical
 import android.os.Bundle
@@ -7,22 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.moumou.midicontroller.Fader
 import com.moumou.midicontroller.R
-import com.moumou.midicontroller.databinding.FaderFragmentBinding
+import com.moumou.midicontroller.databinding.VolumeFadersFragmentBinding
 import com.moumou.midicontroller.midi.MidiController
 
 /**
  * Created by MouMou on 02-04-20.
  */
-class FaderFragment : Fragment() {
+class VolumeFadersFragment : Fragment() {
     companion object {
         const val AMOUNT_FADERS = 6
 
-        fun newInstance() = FaderFragment().apply {
+        fun newInstance() = VolumeFadersFragment().apply {
             arguments = bundleOf()
         }
     }
@@ -36,9 +38,9 @@ class FaderFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val binding =
-            DataBindingUtil.inflate<FaderFragmentBinding>(
+            DataBindingUtil.inflate<VolumeFadersFragmentBinding>(
                 inflater,
-                R.layout.fader_fragment,
+                R.layout.volume_faders_fragment,
                 container,
                 false
             )
@@ -56,8 +58,8 @@ class FaderFragment : Fragment() {
             return Fader(
                 boxedVertical,
                 textView,
-                MidiController.channel,
-                MidiController.faderNotes[index].toByte()
+                MidiController.Notes.channel,
+                MidiController.Notes.volumeFadersNotes[index].toByte()
             )
         })
 
@@ -69,7 +71,12 @@ class FaderFragment : Fragment() {
             fader.boxedVertical.setOnBoxedPointsChangeListener(object :
                 BoxedVertical.OnValuesChangeListener {
                 override fun onPointsChanged(boxedPoints: BoxedVertical?, value: Int) {
-                    MidiController.sendControlChange(fader.channel, fader.note, value.toByte())
+                    val sent =
+                        MidiController.sendControlChange(fader.channel, fader.note, value.toByte())
+                    if (!sent) {
+                        Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
 
                 override fun onStartTrackingTouch(boxedPoints: BoxedVertical?) {

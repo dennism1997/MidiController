@@ -2,8 +2,9 @@ package com.moumou.midicontroller.midi
 
 import android.media.midi.*
 import android.util.Log
-import com.moumou.midicontroller.ui.main.fader.FaderFragment
 import com.moumou.midicontroller.ui.main.midi.LaunchButtons
+import com.moumou.midicontroller.ui.main.mixer.MixerFragment
+import com.moumou.midicontroller.ui.main.volumeFaders.VolumeFadersFragment
 import java.io.Serializable
 
 
@@ -16,31 +17,7 @@ object MidiController : MidiReceiver(), Serializable {
     private var outputPort: MidiOutputPort? = null
     private val subscribers: ArrayList<MidiReceiverSubscriber> = ArrayList()
 
-    val launchPadNotes: Array<Int> = Array(LaunchButtons.AMOUNT_BUTTONS) {
-        getNextNote()
-    }
-
-    val faderNotes: Array<Int> = Array(FaderFragment.AMOUNT_FADERS) {
-        getNextNote()
-    }
-
-    val upDownButtonNotes: Pair<Int, Int> = Pair(getNextNote(), getNextNote())
-
-    private var currentNote: Int = 0
-    fun getNextNote(): Int {
-        if (currentNote == 127) {
-            channel++
-            currentNote = 0
-        } else {
-            currentNote += 1
-        }
-        return currentNote
-    }
-
-    var channel: Int = 1
-        private set
-
-    private fun sendMidiMessage(byte1: Byte, byte2: Byte, byte3: Byte) {
+    private fun sendMidiMessage(byte1: Byte, byte2: Byte, byte3: Byte): Boolean {
         val byteArray = byteArrayOf(byte1, byte2, byte3)
         byteArray.forEachIndexed { index, byte ->
             if (byte < -127) {
@@ -51,20 +28,24 @@ object MidiController : MidiReceiver(), Serializable {
             }
         }
         Log.d("MIDI Sent", byteArray.joinToString())
-        inputPort!!.send(byteArray, 0, 3)
+        return if (inputPort != null) {
+            inputPort!!.send(byteArray, 0, 3)
+            true
+        } else {
+            false
+        }
     }
 
-    fun sendNoteOnMessage(channel: Int, note: Byte, value: Byte) {
-        sendMidiMessage(MidiMessage.noteOn(channel), note, value)
+    fun sendNoteOnMessage(channel: Int, note: Byte, value: Byte): Boolean {
+        return sendMidiMessage(MidiMessage.noteOn(channel), note, value)
     }
 
-    fun sendNoteOnMessage(channel: Int, note: Int, value: Int) {
-        sendMidiMessage(MidiMessage.noteOn(channel), note.toByte(), value.toByte())
+    fun sendNoteOnMessage(channel: Int, note: Int, value: Int): Boolean {
+        return sendMidiMessage(MidiMessage.noteOn(channel), note.toByte(), value.toByte())
     }
 
-
-    fun sendControlChange(channel: Int, note: Byte, value: Byte) {
-        sendMidiMessage(MidiMessage.controlChange(channel), note, value)
+    fun sendControlChange(channel: Int, note: Byte, value: Byte): Boolean {
+        return sendMidiMessage(MidiMessage.controlChange(channel), note, value)
     }
 
     fun setDevice(device: MidiDevice) {
@@ -119,5 +100,31 @@ object MidiController : MidiReceiver(), Serializable {
 
     fun removeSubscriber(subscriber: MidiReceiverSubscriber) {
         this.subscribers.remove(subscriber)
+    }
+
+    object Notes {
+        val launchPadNotes: Array<Int> = Array(LaunchButtons.AMOUNT_BUTTONS) {
+            getNextNote()
+        }
+        val volumeFadersNotes: Array<Int> = Array(VolumeFadersFragment.AMOUNT_FADERS) {
+            getNextNote()
+        }
+        val upDownButtonNotes: Pair<Int, Int> = Pair(getNextNote(), getNextNote())
+        val mixerNotes: Array<Int> = Array(MixerFragment.AMOUNT_FADERS) {
+            getNextNote()
+        }
+        private var currentNote: Int = 0
+        fun getNextNote(): Int {
+            if (currentNote == 127) {
+                channel++
+                currentNote = 0
+            } else {
+                currentNote += 1
+            }
+            return currentNote
+        }
+
+        var channel: Int = 1
+            private set
     }
 }

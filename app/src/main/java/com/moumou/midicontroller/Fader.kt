@@ -1,4 +1,4 @@
-package com.moumou.midicontroller.ui.main.fader
+package com.moumou.midicontroller
 
 import abak.tr.com.boxedverticalseekbar.BoxedVertical
 import android.widget.TextView
