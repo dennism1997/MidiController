@@ -5,6 +5,7 @@ import android.util.Log
 import com.moumou.midicontroller.ui.main.midi.LaunchButtons
 import com.moumou.midicontroller.ui.main.mixer.MixerFragment
 import com.moumou.midicontroller.ui.main.volumeFaders.VolumeFadersFragment
+import java.io.IOException
 import java.io.Serializable
 
 
@@ -13,39 +14,46 @@ import java.io.Serializable
  */
 object MidiController : MidiReceiver(), Serializable {
 
+    private const val logTag = "MIDI"
     private var inputPort: MidiInputPort? = null
     private var outputPort: MidiOutputPort? = null
     private val subscribers: ArrayList<MidiReceiverSubscriber> = ArrayList()
 
-    private fun sendMidiMessage(byte1: Byte, byte2: Byte, byte3: Byte): Boolean {
+    private fun sendMidiMessage(byte1: Byte, byte2: Byte, byte3: Byte) {
+        if (inputPort == null) {
+            throw MidiException("Input port null")
+        }
         val byteArray = byteArrayOf(byte1, byte2, byte3)
         byteArray.forEachIndexed { index, byte ->
             if (byte < -127) {
-                throw RuntimeException("Midi byte at index `$index` must be bigger than -127, but was `$byte`")
+                throw MidiException("Midi byte at index `$index` must be bigger than -127, but was `$byte`")
             }
             if (byte > 127) {
-                throw RuntimeException("Midi byte at index `$index` must be smaller than 128, but was `$byte`")
+                throw MidiException("Midi byte at index `$index` must be smaller than 128, but was `$byte`")
             }
         }
-        Log.d("MIDI Sent", byteArray.joinToString())
-        return if (inputPort != null) {
+        try {
             inputPort!!.send(byteArray, 0, 3)
-            true
-        } else {
-            false
+            Log.d("MIDI Sent", byteArray.joinToString())
+        } catch (e: IOException) {
+            throw MidiException(e.toString())
         }
     }
 
-    fun sendNoteOnMessage(channel: Int, note: Byte, value: Byte): Boolean {
-        return sendMidiMessage(MidiMessage.noteOn(channel), note, value)
+    fun sendNoteOnMessage(channel: Int, note: Byte, value: Byte) {
+        sendMidiMessage(MidiMessage.noteOn(channel), note, value)
     }
 
-    fun sendNoteOnMessage(channel: Int, note: Int, value: Int): Boolean {
-        return sendMidiMessage(MidiMessage.noteOn(channel), note.toByte(), value.toByte())
+    fun sendNoteOnMessage(channel: Int, note: Int, value: Int) {
+        sendNoteOnMessage(channel, note.toByte(), value.toByte())
     }
 
-    fun sendControlChange(channel: Int, note: Byte, value: Byte): Boolean {
-        return sendMidiMessage(MidiMessage.controlChange(channel), note, value)
+    fun sendControlChange(channel: Int, note: Byte, value: Byte) {
+        sendMidiMessage(MidiMessage.controlChange(channel), note, value)
+    }
+
+    fun sendControlChange(channel: Int, note: Byte, value: Int) {
+        sendControlChange(channel, note, value.toByte())
     }
 
     fun setDevice(device: MidiDevice) {
@@ -65,10 +73,10 @@ object MidiController : MidiReceiver(), Serializable {
             }
         }
         if (this.inputPort == null) {
-            Log.e("MIDI", "input port null")
+            throw MidiException("Input port null")
         }
         if (this.outputPort == null) {
-            Log.e("MIDI", "output port null")
+            throw MidiException("Output port null")
         }
     }
 

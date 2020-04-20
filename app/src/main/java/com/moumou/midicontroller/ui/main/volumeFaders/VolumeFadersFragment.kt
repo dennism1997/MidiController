@@ -16,6 +16,7 @@ import com.moumou.midicontroller.Fader
 import com.moumou.midicontroller.R
 import com.moumou.midicontroller.databinding.VolumeFadersFragmentBinding
 import com.moumou.midicontroller.midi.MidiController
+import com.moumou.midicontroller.midi.MidiException
 
 /**
  * Created by MouMou on 02-04-20.
@@ -71,11 +72,10 @@ class VolumeFadersFragment : Fragment() {
             fader.boxedVertical.setOnBoxedPointsChangeListener(object :
                 BoxedVertical.OnValuesChangeListener {
                 override fun onPointsChanged(boxedPoints: BoxedVertical?, value: Int) {
-                    val sent =
-                        MidiController.sendControlChange(fader.channel, fader.note, value.toByte())
-                    if (!sent) {
-                        Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
-                            .show()
+                    try {
+                        MidiController.sendNoteOnMessage(fader.channel, fader.note, value.toByte())
+                    } catch (e: MidiException) {
+                        Toast.makeText(context!!, e.toString(), Toast.LENGTH_SHORT).show()
                     }
                 }
 

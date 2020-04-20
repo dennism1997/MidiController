@@ -1,6 +1,7 @@
 package com.moumou.midicontroller.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,7 @@ import com.google.android.material.button.MaterialButton
 import com.moumou.midicontroller.R
 import com.moumou.midicontroller.databinding.LaunchpadFragmentBinding
 import com.moumou.midicontroller.midi.MidiController
+import com.moumou.midicontroller.midi.MidiException
 import com.moumou.midicontroller.ui.main.midi.LaunchButtons
 import kotlinx.android.synthetic.main.launchpad_fragment.*
 
@@ -57,9 +59,11 @@ class LaunchPadFragment : Fragment() {
         buttons.forEachIndexed { index, button ->
             val note = MidiController.Notes.launchPadNotes[index]
             button.setOnClickListener {
-                val sent = MidiController.sendNoteOnMessage(MidiController.Notes.channel, note, 127)
-                if (!sent) {
-                    Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
+                try {
+                    MidiController.sendNoteOnMessage(MidiController.Notes.channel, note, 127)
+                } catch (e: MidiException) {
+                    Log.e("MIDI", e.toString())
+                    Toast.makeText(context!!, e.toString(), Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -67,19 +71,18 @@ class LaunchPadFragment : Fragment() {
 
         val notes = MidiController.Notes.upDownButtonNotes
         upButton.setOnClickListener {
-            val sent =
+            try {
                 MidiController.sendNoteOnMessage(MidiController.Notes.channel, notes.first, 127)
-            if (!sent) {
-                Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
-                    .show()
+            } catch (e: MidiException) {
+                Toast.makeText(context!!, e.toString(), Toast.LENGTH_SHORT).show()
             }
+
         }
         downButton.setOnClickListener {
-            val sent =
+            try {
                 MidiController.sendNoteOnMessage(MidiController.Notes.channel, notes.second, 127)
-            if (!sent) {
-                Toast.makeText(context!!, "Could not send midi message", Toast.LENGTH_SHORT)
-                    .show()
+            } catch (e: MidiException) {
+                Toast.makeText(context!!, e.toString(), Toast.LENGTH_SHORT).show()
             }
         }
     }
